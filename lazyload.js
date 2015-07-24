@@ -15,9 +15,32 @@
   }
 })(this, function () {
 
-  function Lazyload () {
+var utils = (function (win, doc) {
+  var self = {};
+
+  return self;
+})(window, document, undefined);
+
+function Lazyload (cfgs) {
+  return this instanceof Lazyload
+    ? this._init.call(this, cfgs)
+    : new Lazyload(cfgs);
+}
+
+Lazyload.prototype = {
+  constructor: Lazyload,
+
+  _init: function (cfgs) {
+    var self = this;
+    var defaults = {
+      container: document,
+      imgAttr: 'data-lazyload',
+      diff: 100
+    };
 
   }
+};
 
-  return Lazyload;
+return Lazyload;
+
 });
