@@ -94,6 +94,21 @@ var utils = (function (win, doc) {
   return self;
 })(window, document, undefined);
 
+function getOffset (el) {
+  var parent = el,
+    left = 0,
+    top = 0;
+  while (parent != null && parent != doc) {
+    left += parent.offsetLeft;
+    top += parent.offsetTop;
+    parent = parent.offsetParent;
+  }
+  return {
+    left: left,
+    top: top
+  };
+}
+
 function Lazyload (cfgs) {
   return this instanceof Lazyload
     ? this._init.call(this, cfgs)
@@ -116,6 +131,7 @@ Lazyload.prototype = {
     self.diff = self.diff === undefined ? defaults.diff : cfgs.diff;
     self.autoDestroy = self.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
     self.diff = self._getBoundingRect();
+    console.log(self.diff);
     self._init = null;
   },
 
@@ -139,8 +155,38 @@ Lazyload.prototype = {
 
   _getBoundingRect: function () {
     var self = this,
-      vh, vw, left, top;
+      element = self.element,
+      diff = self.diff,
+      elemOffset = getOffset(element),
+      left = elemOffset.left,
+      top = elemOffset.top,
+      vh, vw;
 
+    if (element == doc) {
+      var docBoundingReact = doc.documentElement.getBoundingClientRect();
+      vw = docBoundingReact.width;
+      vh = docBoundingReact.height;
+    }
+    else {
+      vw = element.clientWidth;
+      vh = element.clientHeight;
+    }
+    console.log(vh);
+    if (!utils.isObject(diff)) {
+      diff = {
+        top: diff,
+        right: diff,
+        bottom: diff,
+        left: diff
+      };
+    }
+
+    return {
+      top: top - (diff.top || 0),
+      right: left + vw + (diff.right || 0),
+      bottom: top + vh + (diff.bottom || 0),
+      left: left - (diff.left || 0)
+    };
   }
 };
 
