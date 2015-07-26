@@ -21,7 +21,8 @@ var utils = (function (win, doc) {
   var ArrayProto = Array.prototype,
     ObjProto = Object.prototype,
     FuncProto = Function.prototype;
-  var toString = ObjProto.toString,
+  var slice = ArrayProto.slice,
+    toString = ObjProto.toString,
     hasOwnProperty = ObjProto.hasOwnProperty;
   var nativeKeys = Object.keys,
     nativeIsArray = Array.isArray;
@@ -91,6 +92,58 @@ var utils = (function (win, doc) {
     return obj;
   };
 
+  self.buffer = function (fn, ms, context) {
+    var self = this;
+
+    ms = ms || 150;
+    if (ms === -1) {
+      return function () {
+        fn.apply(context || null, arguments);
+      };
+    }
+    var bufferTimer = null;
+    function f () {
+      f.stop();
+      bufferTimer = self.later(fn, ms, 0, context || null, arguments);
+    }
+    f.stop = function () {
+      if (bufferTimer) {
+        bufferTimer.cancel();
+        bufferTimer = 0;
+      }
+    };
+    return f;
+  };
+
+  self.later = function (fn, when, periodic, context, data) {
+    if (!fn) {
+      return;
+    }
+    var d = slice.call(data);
+    when = when || 0;
+    if (typeof fn === 'string') {
+      fn = context[fn];
+    }
+
+    var f = function () {
+        fn.apply(context, d);
+      },
+      r = (periodic) ? setInterval(f, when) : setTimeout(f, when);
+
+    return {
+      id: r,
+      interval: periodic,
+      cancel: function () {
+        if (this.interval) {
+          clearInterval(r);
+        }
+        else {
+          clearTimeout(r);
+        }
+      }
+    };
+  };
+
   return self;
 })(window, document, undefined);
 
@@ -131,7 +184,7 @@ Lazyload.prototype = {
     self.diff = self.diff === undefined ? defaults.diff : cfgs.diff;
     self.autoDestroy = self.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
     self.diff = self._getBoundingRect();
-    console.log(self.diff);
+    self._elementIsNotDocument = self.element.nodeType != 9;
     self._init = null;
   },
 
