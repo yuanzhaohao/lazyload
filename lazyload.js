@@ -18,6 +18,11 @@
 var utils = (function (win, doc) {
   var self = {};
 
+  self.isObject = function (obj) {
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+  };
+
   return self;
 })(window, document, undefined);
 
@@ -35,9 +40,11 @@ Lazyload.prototype = {
     var defaults = {
       container: document,
       imgAttr: 'data-lazyload',
-      diff: 100
+      diff: 100,
+      autoDestroy: true
     };
 
+    console.log(defaults.container);
   }
 };
 

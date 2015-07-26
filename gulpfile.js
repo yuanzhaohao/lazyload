@@ -16,13 +16,13 @@ gulp.task('js', function () {
 
 gulp.task('connect', function () {
   return connect.server({
-    root: ['./demo'],
+    root: ['./'],
     livereload: true,
     port: '3000'
   });
 });
 gulp.task('open', function () {
-  return gulp.src('./index.html').pipe(open('', { url: 'http://localhost:3000'}));
+  return gulp.src('./demo/index.html').pipe(open('', { url: 'http://localhost:3000/demo/index.html'}));
 });
 
 gulp.task('default', ['js']);
