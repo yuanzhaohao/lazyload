@@ -241,6 +241,18 @@ Lazyload.prototype = {
       bottom: top + vh + (diff.bottom || 0),
       left: left - (diff.left || 0)
     };
+  },
+
+  resume: function () {
+
+  },
+
+  pause: function () {
+
+  },
+
+  refresh: function () {
+    
   }
 };
 
