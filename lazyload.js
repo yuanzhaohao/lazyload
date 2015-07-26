@@ -175,12 +175,13 @@ Lazyload.prototype = {
     var self = this;
     var defaults = {
       element: document,
-      attr: 'data-lazyload',
+      attribute: 'data-lazyload',
       diff: 100,
-      autoDestroy: true
+      autoDestroy: true,
+      duration: 300
     };
     self.element = self._getElement(cfgs.element);
-    self.attr = cfgs.attr === undefined || typeof cfgs.attr !== 'string' ? defaults.attr : cfgs.attr;
+    self.attribute = cfgs.attribute === undefined || typeof cfgs.attribute !== 'string' ? defaults.attribute : cfgs.attribute;
     self.diff = self.diff === undefined ? defaults.diff : cfgs.diff;
     self.autoDestroy = self.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
     self.diff = self._getBoundingRect();
