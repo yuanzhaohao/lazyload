@@ -14,7 +14,8 @@
     root.Lazyload = factory();
   }
 })(this, function () {
-
+var win = window,
+  doc = document;
 var utils = (function (win, doc) {
   var self = {};
   var ArrayProto = Array.prototype,
@@ -28,6 +29,10 @@ var utils = (function (win, doc) {
   self.isObject = function (obj) {
     var type = typeof obj;
     return type === 'function' || type === 'object' && !!obj;
+  };
+
+  self.isElement = function (obj) {
+    return !!(obj && obj.nodeType === 1);
   };
 
   self.isArray = nativeIsArray || function (obj) {
@@ -101,15 +106,41 @@ Lazyload.prototype = {
   _init: function (cfgs) {
     var self = this;
     var defaults = {
-      container: document,
+      element: document,
       attr: 'data-lazyload',
       diff: 100,
       autoDestroy: true
     };
-    cfgs = utils.extend(defaults, cfgs);
-    console.log(utils.each(cfgs, function (val, index) {
-      console.log(val, index);
-    }));
+    self.element = self._getElement(cfgs.element);
+    self.attr = cfgs.attr === undefined || typeof cfgs.attr !== 'string' ? defaults.attr : cfgs.attr;
+    self.diff = self.diff === undefined ? defaults.diff : cfgs.diff;
+    self.autoDestroy = self.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
+    self.diff = self._getBoundingRect();
+    self._init = null;
+  },
+
+  _getElement: function (el) {
+    var self = this;
+
+    if (el === win) {
+      el = doc;
+    }
+    if (utils.isElement(el)) {
+      if (el.nodeName === 'BODY') {
+        el = doc;
+      }
+    }
+    else if (typeof el === 'string') {
+      el = doc.querySelector(el);
+    }
+
+    return el || doc;
+  },
+
+  _getBoundingRect: function () {
+    var self = this,
+      vh, vw, left, top;
+
   }
 };
 
