@@ -207,13 +207,15 @@ Lazyload.prototype = {
       attribute: 'data-lazyload',
       diff: 100,
       autoDestroy: true,
-      duration: 300
+      duration: 300,
+      onStart: null
     };
     self.element = self._getElement(cfgs.element);
     self.attribute = utils.isString(cfgs.attribute) ? cfgs.attribute : defaults.attribute;
     self.diff = cfgs.diff === undefined ? defaults.diff : cfgs.diff;
     self.autoDestroy = cfgs.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
     self.duration = utils.isNumber(cfgs.duration) && cfgs.duration > 0 ? cfgs.duration : defaults.duration;
+    self.onStart = utils.isFunction(cfgs.onStart) ? cfgs.onStart : defaults.onStart;
     self.diff = self._getBoundingRect();
 
     self._elementIsNotDocument = self.element.nodeType != 9;
@@ -230,11 +232,20 @@ Lazyload.prototype = {
   _initLoadEvent: function () {
     var self = this,
       autoDestroy = self.autoDestroy,
-      duration = self.duration;
+      duration = self.duration,
+      attribute = self.attribute;
 
     self.imgHandle = function () {
-      var img = this;
-      console.log(img);
+      var img = this,
+        param = {
+          elem: img,
+          src: img.getAttribute(attribute)
+        };
+      self.onStart && self.onStart(param);
+      if (img.src != param.src) {
+        img.src = param.src;
+      }
+      img.removeAttribute(attribute);
     };
 
     self._lazyFn = utils.buffer(function () {
@@ -299,14 +310,63 @@ Lazyload.prototype = {
   },
 
   _loadItems: function () {
-    var self = this;
+    var self = this,
+      element = self.element;
 
+    if (self._elementIsNotDocument && !element.offsetWidth) {
+      return;
+    }
+    utils.each(self._callbacks, function (callback, key) {
+      callback && self._loadItem(key, callback);
+    });
   },
 
-  _loadItem: function () {
-    var self = this;
+  _loadItem: function (key, callback) {
+    var self = this,
+      callback = callback || self._callbacks[key];
 
-    
+    if (!callback) {
+      return true;
+    }
+    var el = callback.el,
+      fn = callback.fn,
+      remove = false;
+    if (self.__inViewport(el)) {
+      try {
+        remove = fn.call(el);
+      }
+      catch (e) {
+        setTimeout(function () {
+          throw e;
+        }, 0);
+      }
+    }
+    if (remove !== false) {
+      delete self._callbacks[key];
+    }
+    return remove;
+  },
+
+  __inViewport: function (el) {
+    var self = this,
+      isDoc = !self._elementIsNotDocument,
+      elemOffset = getOffset(el),
+      diff = self.diff,
+      top, right, bottom, left;
+
+    if (isDoc) {
+      var w = win.innerWidth,
+        h = win.innerHeight,
+        x = win.scrollX,
+        y = win.scrollY;
+
+      bottom = h + y <= elemOffset.top - diff.bottom;
+      right = w + x <= elemOffset.left - diff.right;
+      top = y >= elemOffset.top + el.offsetHeight + diff.top;
+      left = x > elemOffset.left + el.offsetWidth + diff.left;
+    }
+
+    return !top && !right && !bottom && !left;
   },
 
   addCallback: function (el, fn) {
