@@ -225,7 +225,8 @@ Lazyload.prototype = {
 
     self._initLoadEvent();
     self.addElements(self.element);
-    self._lazyFn();
+    self._loadFn();
+    self.resume();
     self._init = null;
   },
 
@@ -248,9 +249,9 @@ Lazyload.prototype = {
       img.removeAttribute(attribute);
     };
 
-    self._lazyFn = utils.buffer(function () {
+    self._loadFn = utils.buffer(function () {
       if (autoDestroy && utils.isEmpty(self._callbacks)) {
-        return;
+        self.destroy();
       }
       self._loadItems();
     }, duration, self);
@@ -283,15 +284,15 @@ Lazyload.prototype = {
       top = elemOffset.top,
       vh, vw;
 
-    if (element == doc) {
-      var docBoundingReact = doc.documentElement.getBoundingClientRect();
-      vw = docBoundingReact.width;
-      vh = docBoundingReact.height;
-    }
-    else {
-      vw = element.clientWidth;
-      vh = element.clientHeight;
-    }
+    // if (element == doc) {
+    //   var docBoundingReact = doc.documentElement.getBoundingClientRect();
+    //   vw = docBoundingReact.width;
+    //   vh = docBoundingReact.height;
+    // }
+    // else {
+    //   vw = element.clientWidth;
+    //   vh = element.clientHeight;
+    // }
     if (!utils.isObject(diff)) {
       diff = {
         top: diff,
@@ -300,6 +301,8 @@ Lazyload.prototype = {
         left: diff
       };
     }
+
+    return diff;
 
     return {
       top: top - (diff.top || 0),
@@ -410,11 +413,43 @@ Lazyload.prototype = {
   },
 
   resume: function () {
+    var self = this,
+      load = self._loadFn;
 
+    if (self._destroyed) {
+      return;
+    }
+    win.addEventListener('scroll', load, false);
+    win.addEventListener('touchmove', load, false);
+    win.addEventListener('resize', load, false);
+    if (self._elementIsNotDocument) {
+      self.element.addEventListener('scroll', load, false);
+      self.element.addEventListener('touchmove', load, false);
+    }
   },
 
   pause: function () {
+    var self = this,
+      load = self._loadFn;
 
+    if (self._destroyed) {
+      return;
+    }
+    win.removeEventListener('scroll', load, false);
+    win.removeEventListener('touchmove', load, false);
+    win.removeEventListener('resize', load, false);
+    if (self._elementIsNotDocument) {
+      self.element.removeEventListener('scroll', load, false);
+      self.element.removeEventListener('touchmove', load, false);
+    }
+  },
+
+  destroy: function () {
+    var self = this;
+
+    self.pause();
+    self._callbacks = {};
+    self._destroyed = 1;
   },
 
   refresh: function () {
