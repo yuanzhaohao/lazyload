@@ -15,7 +15,9 @@
   }
 })(this, function () {
 var win = window,
-  doc = document;
+  doc = document,
+  INDEX = 0,
+  noop = function () {};
 var utils = (function (win, doc) {
   var self = {};
   var ArrayProto = Array.prototype,
@@ -97,6 +99,27 @@ var utils = (function (win, doc) {
       return toString.call(obj) === '[object ' + name + ']';
     };
   });
+
+  self.isEmpty = function (obj) {
+    if (obj == null) {
+      return true;
+    }
+    if (self.isArray(obj) || self.isString(obj)) {
+      return obj.length === 0;
+    }
+    return self.keys(obj).length === 0;
+  };
+
+  self.filter = function (obj, predicate, context) {
+    var results = [];
+
+    self.each(obj, function (value, index, list) {
+      if (predicate.call(context, value, index, list)) {
+        results.push(value);
+      }
+    });
+    return results;
+  };
 
   self.buffer = function (fn, ms, context) {
     var self = this;
@@ -209,6 +232,11 @@ Lazyload.prototype = {
       autoDestroy = self.autoDestroy,
       duration = self.duration;
 
+    self.imgHandle = function () {
+      var img = this;
+      console.log(img);
+    };
+
     self._lazyFn = utils.buffer(function () {
       if (autoDestroy && utils.isEmpty(self._callbacks)) {
         return;
@@ -275,9 +303,50 @@ Lazyload.prototype = {
 
   },
 
-  addElements: function (els) {
+  _loadItem: function () {
     var self = this;
+
     
+  },
+
+  addCallback: function (el, fn) {
+    var self = this,
+      callbacks = self._callbacks,
+      callback = {
+        el: el || doc,
+        fn: fn || noop
+      },
+      key = ++INDEX;
+
+    callbacks[key] = callback;
+    self._loadItem(key, callback);
+    return key;
+  },
+
+  addElements: function (els) {
+    var self = this,
+      attribute = self.attribute;
+
+    if (utils.isString(els)) {
+      els = doc.querySelectorAll(els);
+    }
+    else if (!utils.isArray(els)) {
+      els = [els];
+    }
+    utils.each(els, function (el, key) {
+      if (!el) {
+        return;
+      }
+      var imgs = [];
+      utils.each(el.querySelectorAll('img'), function (img) {
+        imgs.push(img);
+      });
+      utils.each(utils.filter([el].concat(imgs), function (img) {
+        return img.getAttribute && img.getAttribute(attribute);
+      }, self), function (img) {
+        var key = self.addCallback(img, self.imgHandle);
+      });
+    });
   },
 
   resume: function () {
