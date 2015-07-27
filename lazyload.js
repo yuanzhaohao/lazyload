@@ -92,6 +92,12 @@ var utils = (function (win, doc) {
     return obj;
   };
 
+  self.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
+    self['is' + name] = function(obj) {
+      return toString.call(obj) === '[object ' + name + ']';
+    };
+  });
+
   self.buffer = function (fn, ms, context) {
     var self = this;
 
@@ -181,12 +187,34 @@ Lazyload.prototype = {
       duration: 300
     };
     self.element = self._getElement(cfgs.element);
-    self.attribute = cfgs.attribute === undefined || typeof cfgs.attribute !== 'string' ? defaults.attribute : cfgs.attribute;
-    self.diff = self.diff === undefined ? defaults.diff : cfgs.diff;
-    self.autoDestroy = self.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
+    self.attribute = utils.isString(cfgs.attribute) ? cfgs.attribute : defaults.attribute;
+    self.diff = cfgs.diff === undefined ? defaults.diff : cfgs.diff;
+    self.autoDestroy = cfgs.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
+    self.duration = utils.isNumber(cfgs.duration) && cfgs.duration > 0 ? cfgs.duration : defaults.duration;
     self.diff = self._getBoundingRect();
+
     self._elementIsNotDocument = self.element.nodeType != 9;
+
+    self._callbacks = {};
+    self._startLis = [];
+
+    self._initLoadEvent();
+    self.addElements(self.element);
+    self._lazyFn();
     self._init = null;
+  },
+
+  _initLoadEvent: function () {
+    var self = this,
+      autoDestroy = self.autoDestroy,
+      duration = self.duration;
+
+    self._lazyFn = utils.buffer(function () {
+      if (autoDestroy && utils.isEmpty(self._callbacks)) {
+        return;
+      }
+      self._loadItems();
+    }, duration, self);
   },
 
   _getElement: function (el) {
@@ -200,7 +228,7 @@ Lazyload.prototype = {
         el = doc;
       }
     }
-    else if (typeof el === 'string') {
+    else if (utils.isString(el)) {
       el = doc.querySelector(el);
     }
 
@@ -225,7 +253,6 @@ Lazyload.prototype = {
       vw = element.clientWidth;
       vh = element.clientHeight;
     }
-    console.log(vh);
     if (!utils.isObject(diff)) {
       diff = {
         top: diff,
@@ -243,6 +270,16 @@ Lazyload.prototype = {
     };
   },
 
+  _loadItems: function () {
+    var self = this;
+
+  },
+
+  addElements: function (els) {
+    var self = this;
+    
+  },
+
   resume: function () {
 
   },
@@ -252,7 +289,7 @@ Lazyload.prototype = {
   },
 
   refresh: function () {
-    
+
   }
 };
 
