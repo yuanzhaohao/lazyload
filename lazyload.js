@@ -277,22 +277,8 @@ Lazyload.prototype = {
 
   _getBoundingRect: function () {
     var self = this,
-      element = self.element,
-      diff = self.diff,
-      elemOffset = getOffset(element),
-      left = elemOffset.left,
-      top = elemOffset.top,
-      vh, vw;
+      diff = self.diff
 
-    // if (element == doc) {
-    //   var docBoundingReact = doc.documentElement.getBoundingClientRect();
-    //   vw = docBoundingReact.width;
-    //   vh = docBoundingReact.height;
-    // }
-    // else {
-    //   vw = element.clientWidth;
-    //   vh = element.clientHeight;
-    // }
     if (!utils.isObject(diff)) {
       diff = {
         top: diff,
@@ -303,13 +289,6 @@ Lazyload.prototype = {
     }
 
     return diff;
-
-    return {
-      top: top - (diff.top || 0),
-      right: left + vw + (diff.right || 0),
-      bottom: top + vh + (diff.bottom || 0),
-      left: left - (diff.left || 0)
-    };
   },
 
   _loadItems: function () {
