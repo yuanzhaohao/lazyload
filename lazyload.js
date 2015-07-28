@@ -375,6 +375,9 @@ Lazyload.prototype = {
   },
 
   addCallback: function (el, fn) {
+    if (!utils.isElement(el)) {
+      return;
+    }
     var self = this,
       callbacks = self._callbacks,
       callback = {
@@ -386,6 +389,20 @@ Lazyload.prototype = {
     callbacks[key] = callback;
     self._loadItem(key, callback);
     return key;
+  },
+
+  removeCallback: function (el, fn) {
+    if (!utils.isElement(el)) {
+      return;
+    }
+    var self = this,
+      _callbacks = self._callbacks;
+
+    utils.each(_callbacks, function (callback, key) {
+      if (el == callback.el && (fn ? fn == callback.fn : 1)) {
+        delete _callbacks[key];
+      }
+    });
   },
 
   addElements: function (els) {
