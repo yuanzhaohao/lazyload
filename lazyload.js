@@ -121,58 +121,81 @@ var utils = (function (win, doc) {
     return results;
   };
 
-  self.buffer = function (fn, ms, context) {
-    var self = this;
-
-    ms = ms || 150;
-    if (ms === -1) {
-      return function () {
-        fn.apply(context || null, arguments);
-      };
-    }
-    var bufferTimer = null;
-    function f () {
-      f.stop();
-      bufferTimer = self.later(fn, ms, 0, context || null, arguments);
-    }
-    f.stop = function () {
-      if (bufferTimer) {
-        bufferTimer.cancel();
-        bufferTimer = 0;
-      }
-    };
-    return f;
+  self.now = Date.now || function() {
+    return new Date().getTime();
   };
 
-  self.later = function (fn, when, periodic, context, data) {
-    if (!fn) {
-      return;
-    }
-    var d = slice.call(data);
-    when = when || 0;
-    if (typeof fn === 'string') {
-      fn = context[fn];
-    }
-
-    var f = function () {
-        fn.apply(context, d);
+  self.later = function (fn, ms, context, data) {
+    var d = slice.call(data),
+      f = function () {
+        fn.apply(context, data);
       },
-      r = (periodic) ? setInterval(f, when) : setTimeout(f, when);
+      r = setTimeout(f, ms);
 
     return {
       id: r,
-      interval: periodic,
       cancel: function () {
-        if (this.interval) {
-          clearInterval(r);
+        clearTimeout(r);
+      }
+    };
+  }
+
+  self.buffer = function (fn, ms, context) {
+    var timer = null;
+
+    ms = ms || 150;
+    if (self.isString(fn)) {
+      fn = context[fn];
+    }
+    function run () {
+      run.stop();
+      timer = self.later(fn, ms, context, arguments);
+    }
+    run.stop = function () {
+      if (timer) {
+        timer.cancel();
+        timer = 0;
+      }
+    };
+    return run;
+  };
+
+  self.throttle = function (fn, ms, context) {
+    var lastStart = 0,
+      lastEnd = 0,
+      timer = null;
+
+    ms = ms || 150;
+    if (self.isString(fn)) {
+      fn = context[fn];
+    }
+    function run () {
+      run.stop();
+      lastStart = self.now();
+      fn.apply(context || this, arguments);
+      lastEnd = self.now();
+    }
+    run.stop = function () {
+      if (timer) {
+        timer.cancel();
+        timer = 0;
+      }
+    };
+    return function () {
+      if (!lastStart
+        || lastEnd >= lastStart && self.now() - lastEnd > ms
+        || lastEnd < lastStart && S.now() - lastStart > ms * 8
+      ) {
+        run();
+      }
+      else {
+        if (timer) {
+          timer.cancel();
         }
-        else {
-          clearTimeout(r);
-        }
+        timer = self.later(run, ms, context, arguments);
       }
     };
   };
-
   return self;
 })(window, document, undefined);
 
@@ -249,7 +272,7 @@ Lazyload.prototype = {
       img.removeAttribute(attribute);
     };
 
-    self._loadFn = utils.buffer(function () {
+    self._loadFn = utils.throttle(function () {
       if (autoDestroy && utils.isEmpty(self._callbacks)) {
         self.destroy();
       }
