@@ -455,7 +455,7 @@ Lazyload.prototype = {
   },
 
   refresh: function () {
-
+    this._loadFn();
   }
 };
 
