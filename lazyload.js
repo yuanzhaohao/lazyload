@@ -356,12 +356,13 @@ Lazyload.prototype = {
 
   _loadItems: function () {
     var self = this,
-      element = self.element;
+      element = self.element,
+      callbacks = self._callbacks;
 
     if (self._elementIsNotDocument && !element.offsetWidth) {
       return;
     }
-    utils.each(self._callbacks, function (callback, key) {
+    utils.each(callbacks, function (callback, key) {
       callback && self._loadItem(key, callback);
     });
   },

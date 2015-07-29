@@ -26,44 +26,75 @@
   color: #999;
   text-align: center;
 }
+.title {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background-color: #ccc;
+  font-size: 16px;
+  color: #999;
+  text-align: center;
+}
 img {
   display: block;
   width: 100%;
-  min-height: 100px;
+  min-height: 200px;
   background-color: #f7f7f7;
   margin: 7px 0;;
+}
+.ajax div {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+.ajax img {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
 <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
 <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
 <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
-<div style="height: 600px;"></div>
-<img class="j_removeElements0" data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" alt="removeElements DEMO" />
-<img class="j_removeElements1" data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" alt="removeElements DEMO" />
-<div id="ajax"></div>
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+<div id="ajax" class="ajax">
+  <h2 class="title">ajax</h2>
+</div>
+<div id="ajax1" class="ajax">
+  <h2 class="title">ajax2</h2>
+</div>
 <script src="zepto.js"></script>
 <script src="../lazyload.js"></script>
 <script>
 window.scrollTo(0, 0);
 var lazy = new Lazyload({
   container: document,
-  diff: 150
+  diff: 0,
+  autoDestroy: false
 });
-lazy.removeElements($('.j_removeElements0'));
-lazy.removeElements(document.querySelectorAll('.j_removeElements1'));
 $.ajax({
   url: 'https://api.github.com/users/octocat/gists',
   dataType: 'jsonp',
   success: function (re) {
     if (re && re.data && re.data.length) {
       var h = '',
-        ajaxEl = $('#ajax');
+        h1 = '',
+        ajaxEl = $('#ajax'),
+        ajaxEl1 = $('#ajax1');
       $.each(re.data, function (key, item) {
-        h += '<img data-lazyload="' + item.owner['avatar_url'] + '" />';
+        h += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="ajax img" /></div>';
+        h1 += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="ajax1 img" /></div>';
       });
-      ajaxEl.html(h);
-      console.log('addElements');
+      ajaxEl.append(h);
+      ajaxEl1.append(h1);
       lazy.addElements(ajaxEl);
+      setTimeout(function () {
+        lazy.addElements(ajaxEl1);
+      }, 5000);
     }
   }
 });
