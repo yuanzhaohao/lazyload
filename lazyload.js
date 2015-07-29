@@ -372,13 +372,12 @@ Lazyload.prototype = {
       w = win.innerWidth,
       h = win.innerHeight,
       x = win.scrollX,
-      y = win.scrollY,
-      bottom = h + y <= elemOffset.top - diff.bottom,
-      right = w + x <= elemOffset.left - diff.right,
-      top = y >= elemOffset.top + el.offsetHeight + diff.top,
-      left = x > elemOffset.left + el.offsetWidth + diff.left;
+      y = win.scrollY;
 
-    return !top && !right && !bottom && !left;
+    return !(h + y <= elemOffset.top - diff.bottom)
+      && !(w + x <= elemOffset.left - diff.right)
+      && !(y >= elemOffset.top + el.offsetHeight + diff.top)
+      && !(x > elemOffset.left + el.offsetWidth + diff.left);
   },
 
   addCallback: function (el, fn) {
