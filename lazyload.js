@@ -266,31 +266,41 @@ Lazyload.prototype = {
   _init: function (cfgs) {
     var self = this;
     var defaults = {
-      element: document,
       attribute: 'data-lazyload',
       diff: 100,
       autoDestroy: true,
       duration: 300,
       onStart: null
     };
-    self.element = self._getElement(cfgs.element);
+    self.element = document;
     self.attribute = utils.isString(cfgs.attribute) ? cfgs.attribute : defaults.attribute;
     self.diff = cfgs.diff === undefined ? defaults.diff : cfgs.diff;
+    self.diff = self._getBoundingRect();
     self.autoDestroy = cfgs.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
     self.duration = utils.isNumber(cfgs.duration) && cfgs.duration > 0 ? cfgs.duration : defaults.duration;
     self.onStart = utils.isFunction(cfgs.onStart) ? cfgs.onStart : defaults.onStart;
-    self.diff = self._getBoundingRect();
-
-    self._elementIsNotDocument = self.element.nodeType != 9;
 
     self._callbacks = {};
-    self._startLis = [];
-
     self._initLoadEvent();
     self.addElements(self.element);
     self._loadFn();
     self.resume();
     self._init = null;
+  },
+
+  _getBoundingRect: function () {
+    var self = this,
+      diff = self.diff;
+
+    if (!utils.isObject(diff)) {
+      diff = {
+        top: diff,
+        right: diff,
+        bottom: diff,
+        left: diff
+      };
+    }
+    return diff;
   },
 
   _initLoadEvent: function () {
@@ -320,48 +330,10 @@ Lazyload.prototype = {
     }, duration, self);
   },
 
-  _getElement: function (el) {
-    var self = this;
-
-    if (el === win) {
-      el = doc;
-    }
-    if (utils.isElement(el)) {
-      if (el.nodeName === 'BODY') {
-        el = doc;
-      }
-    }
-    else if (utils.isString(el)) {
-      el = doc.querySelector(el);
-    }
-
-    return el || doc;
-  },
-
-  _getBoundingRect: function () {
-    var self = this,
-      diff = self.diff
-
-    if (!utils.isObject(diff)) {
-      diff = {
-        top: diff,
-        right: diff,
-        bottom: diff,
-        left: diff
-      };
-    }
-
-    return diff;
-  },
-
   _loadItems: function () {
     var self = this,
-      element = self.element,
       callbacks = self._callbacks;
 
-    if (self._elementIsNotDocument && !element.offsetWidth) {
-      return;
-    }
     utils.each(callbacks, function (callback, key) {
       callback && self._loadItem(key, callback);
     });
@@ -395,22 +367,16 @@ Lazyload.prototype = {
 
   __inViewport: function (el) {
     var self = this,
-      isDoc = !self._elementIsNotDocument,
       elemOffset = getOffset(el),
       diff = self.diff,
-      top, right, bottom, left;
-
-    if (isDoc) {
-      var w = win.innerWidth,
-        h = win.innerHeight,
-        x = win.scrollX,
-        y = win.scrollY;
-
-      bottom = h + y <= elemOffset.top - diff.bottom;
-      right = w + x <= elemOffset.left - diff.right;
-      top = y >= elemOffset.top + el.offsetHeight + diff.top;
+      w = win.innerWidth,
+      h = win.innerHeight,
+      x = win.scrollX,
+      y = win.scrollY,
+      bottom = h + y <= elemOffset.top - diff.bottom,
+      right = w + x <= elemOffset.left - diff.right,
+      top = y >= elemOffset.top + el.offsetHeight + diff.top,
       left = x > elemOffset.left + el.offsetWidth + diff.left;
-    }
 
     return !top && !right && !bottom && !left;
   },
@@ -520,10 +486,6 @@ Lazyload.prototype = {
     win.addEventListener('scroll', load, false);
     win.addEventListener('touchmove', load, false);
     win.addEventListener('resize', load, false);
-    if (self._elementIsNotDocument) {
-      self.element.addEventListener('scroll', load, false);
-      self.element.addEventListener('touchmove', load, false);
-    }
   },
 
   pause: function () {
@@ -536,10 +498,6 @@ Lazyload.prototype = {
     win.removeEventListener('scroll', load, false);
     win.removeEventListener('touchmove', load, false);
     win.removeEventListener('resize', load, false);
-    if (self._elementIsNotDocument) {
-      self.element.removeEventListener('scroll', load, false);
-      self.element.removeEventListener('touchmove', load, false);
-    }
   },
 
   destroy: function () {
