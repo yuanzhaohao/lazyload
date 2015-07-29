@@ -24,6 +24,22 @@ img {
   background-color: #f7f7f7;
   margin: 7px 0;;
 }
+.btn-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #eee;
+  color: #333;
+  font-size: 16px;
+  line-height: 30px;
+  text-align: center;
+}
+.btn {
+  float: left;
+  width: 50%;
+}
 </style>
 <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
 <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
@@ -54,10 +70,39 @@ img {
 <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
 <img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
 <img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+<div class="btn-box">
+  <div class="btn j_resume">resume</div>
+  <div class="btn j_pause">pause</div>
+</div>
+<script src="zepto.js"></script>
 <script src="../lazyload.js"></script>
 <script>
-new Lazyload({
+var lazy = new Lazyload({
   diff: 0
+});
+$('.j_resume').on('click', function () {
+  lazy.resume();
+});
+$('.j_pause').on('click', function () {
+  lazy.pause();
 });
 </script>
 </body>

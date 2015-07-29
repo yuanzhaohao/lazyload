@@ -9,7 +9,7 @@
   <meta name="apple-touch-fullscreen" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <title>addElements - Lazyload demo</title>
+  <title>autoDestroy - Lazyload demo</title>
 </head>
 <body>
 <style media="screen">
@@ -57,23 +57,15 @@ img {
 }
 </style>
 <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
-<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
-<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
-<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
-<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
 <div id="ajax" class="ajax">
   <h2 class="title">ajax</h2>
-</div>
-<div id="ajax1" class="ajax">
-  <h2 class="title">ajax2</h2>
 </div>
 <script src="zepto.js"></script>
 <script src="../lazyload.js"></script>
 <script>
 window.scrollTo(0, 0);
 var lazy = new Lazyload({
-  diff: 0,
-  autoDestroy: false
+  diff: 0
 });
 $.ajax({
   url: 'https://api.github.com/users/octocat/gists',
@@ -86,15 +78,9 @@ $.ajax({
         ajaxEl1 = $('#ajax1');
       $.each(re.data, function (key, item) {
         h += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="ajax img" /></div>';
-        h1 += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="ajax1 img" /></div>';
       });
       ajaxEl.append(h);
-      ajaxEl1.append(h1);
       lazy.addElements(ajaxEl);
-      setTimeout(function () {
-        alert('add ajax1 elements');
-        lazy.addElements(ajaxEl1);
-      }, 5000);
     }
   }
 });
