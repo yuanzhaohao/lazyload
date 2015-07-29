@@ -213,18 +213,21 @@ var utils = (function (win, doc) {
   self.findIndex = createIndexFinder(1);
   self.findLastIndex = createIndexFinder(-1);
 
-  function createIndexOfFinder(dir, predicateFind, sortedIndex) {
+  function createIndexOfFinder(dir) {
     return function(array, item, idx) {
+      idx = idx || 0;
       var i = 0,
         length = array.length;
       if (dir > 0) {
-          i = idx >= 0 ? idx : Math.max(idx + length, i);
+        i = idx >= 0 ? idx : Math.max(idx + length, i);
       }
       else {
-          length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
+        length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
       }
       for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-        if (array[idx] === item) return idx;
+        if (array[idx] === item) {
+          return idx;
+        }
       }
       return -1;
     };
@@ -433,11 +436,11 @@ Lazyload.prototype = {
       return;
     }
     var self = this,
-      _callbacks = self._callbacks;
+      callbacks = self._callbacks;
 
-    utils.each(_callbacks, function (callback, key) {
+    utils.each(callbacks, function (callback, key) {
       if (el == callback.el && (fn ? fn == callback.fn : 1)) {
-        delete _callbacks[key];
+        delete callbacks[key];
       }
     });
   },
@@ -449,22 +452,42 @@ Lazyload.prototype = {
     if (utils.isString(els)) {
       els = doc.querySelectorAll(els);
     }
-    else if (!utils.isArray(els)) {
+    else if (!els.length) {
       els = [els];
     }
     utils.each(els, function (el, key) {
       if (!el) {
         return;
       }
-      var imgs = [];
-      utils.each(el.querySelectorAll('img'), function (img) {
-        imgs.push(img);
+      var imgs = utils.filter(el.querySelectorAll('img'), function (img) {
+        return img;
       });
       utils.each(utils.filter([el].concat(imgs), function (img) {
         return img.getAttribute && img.getAttribute(attribute);
       }, self), function (img) {
         var key = self.addCallback(img, self.imgHandle);
       });
+    });
+  },
+
+  removeElements: function (els) {
+    var self = this,
+      attribute = self.attribute,
+      callbacks = self._callbacks;
+
+    if (utils.isString(els)) {
+      els = doc.querySelectorAll(els);
+    }
+    else if (!els.length) {
+      els = [els];
+    }
+    els = utils.filter(els, function (el) {
+      return el;
+    });
+    utils.each(callbacks, function (callback, key) {
+      if (utils.indexOf(els, callback.el) !== -1) {
+        delete callbacks[key];
+      }
     });
   },
 

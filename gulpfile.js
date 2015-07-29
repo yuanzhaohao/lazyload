@@ -22,7 +22,7 @@ gulp.task('connect', function () {
   });
 });
 gulp.task('open', function () {
-  return gulp.src('./demo/*.html').pipe(open('', { url: 'http://localhost:3000/demo'}));
+  return gulp.src('./demo/index.html').pipe(open('', { url: 'http://localhost:3000/demo'}));
 });
 
 gulp.task('default', ['js']);
