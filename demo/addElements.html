@@ -9,7 +9,7 @@
   <meta name="apple-touch-fullscreen" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <title>removeElements - Lazyload demo</title>
+  <title>addElements - Lazyload demo</title>
 </head>
 <body>
 <style media="screen">
@@ -38,15 +38,35 @@ img {
 <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
 <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
 <div style="height: 600px;"></div>
-<img class="j_removeElements" data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" alt="removeElements DEMO" />
-<img class="j_removeElements" data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" alt="removeElements DEMO" />
+<img class="j_removeElements0" data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" alt="removeElements DEMO" />
+<img class="j_removeElements1" data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" alt="removeElements DEMO" />
+<div id="ajax"></div>
+<script src="zepto.js"></script>
 <script src="../lazyload.js"></script>
 <script>
+window.scrollTo(0, 0);
 var lazy = new Lazyload({
   container: document,
   diff: 150
 });
-lazy.removeElements(document.querySelectorAll('.j_removeElements'));
+lazy.removeElements($('.j_removeElements0'));
+lazy.removeElements(document.querySelectorAll('.j_removeElements1'));
+$.ajax({
+  url: 'https://api.github.com/users/octocat/gists',
+  dataType: 'jsonp',
+  success: function (re) {
+    if (re && re.data && re.data.length) {
+      var h = '',
+        ajaxEl = $('#ajax');
+      $.each(re.data, function (key, item) {
+        h += '<img data-lazyload="' + item.owner['avatar_url'] + '" />';
+      });
+      ajaxEl.html(h);
+      console.log('addElements');
+      lazy.addElements(ajaxEl);
+    }
+  }
+});
 </script>
 </body>
 </html>

@@ -452,7 +452,12 @@ Lazyload.prototype = {
     if (utils.isString(els)) {
       els = doc.querySelectorAll(els);
     }
-    else if (!els.length) {
+    else if (!utils.isArray(els) && els.length) {
+      els = utils.filter(els, function (el) {
+        return el;
+      });
+    }
+    else if (!utils.isArray(els)) {
       els = [els];
     }
     utils.each(els, function (el, key) {
@@ -478,12 +483,14 @@ Lazyload.prototype = {
     if (utils.isString(els)) {
       els = doc.querySelectorAll(els);
     }
-    else if (!els.length) {
+    else if (!utils.isArray(els) && els.length) {
+      els = utils.filter(els, function (el) {
+        return el;
+      });
+    }
+    else if (!utils.isArray(els)) {
       els = [els];
     }
-    els = utils.filter(els, function (el) {
-      return el;
-    });
     utils.each(callbacks, function (callback, key) {
       if (utils.indexOf(els, callback.el) !== -1) {
         delete callbacks[key];
