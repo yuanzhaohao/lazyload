@@ -499,6 +499,17 @@ Lazyload.prototype = {
     });
   },
 
+  getElements: function () {
+    var self = this,
+      els = [],
+      callbacks = self._callbacks;
+
+    utils.each(callbacks, function (callback, key) {
+      callback.el && els.push(callback.el);
+    });
+    return els;
+  },
+
   resume: function () {
     var self = this,
       load = self._loadFn;
