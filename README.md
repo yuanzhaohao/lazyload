@@ -18,7 +18,9 @@ Then your example([localhost:3000/demo/](localhost:3000/demo/)) will open automa
 ## Usage
 
 #### Normal demo
-[live](http://yuanzhaohao.com/lazyload/demo/) [local](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/)
+
+[local demo](http://localhost:3000/demo/)
 
 ``` javascript
 new Lazyload({
@@ -31,6 +33,10 @@ new Lazyload({
 ```
 
 #### autoDestroy demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/autoDestroy.html)
+
+[local demo](http://localhost:3000/demo/autoDestroy.html)
+
 ``` javascript
 var lazy = new Lazyload({
   diff: 0
@@ -55,6 +61,10 @@ $.ajax({
 ```
 
 #### addElements demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/)
+
+[local demo](http://localhost:3000/demo/)
+
 ``` javascript
 var lazy = new Lazyload({
   diff: 0,
@@ -86,6 +96,10 @@ $.ajax({
 ```
 
 #### removeElements demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/)
+
+[local demo](http://localhost:3000/demo/)
+
 ``` javascript
 var lazy = new Lazyload({
   diff: 150
@@ -94,6 +108,10 @@ lazy.removeElements(document.querySelectorAll('.j_removeElements'));
 ```
 
 #### addCallback demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/)
+
+[local demo](http://localhost:3000/demo/)
+
 ``` javascript
 var lazy = new Lazyload({
   diff: 150
