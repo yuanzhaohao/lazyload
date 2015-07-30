@@ -316,7 +316,7 @@ Lazyload.prototype = {
           src: img.getAttribute(attribute)
         };
       self.onStart && self.onStart(param);
-      if (img.src != param.src) {
+      if (param.src && img.src != param.src) {
         img.src = param.src;
       }
       img.removeAttribute(attribute);
