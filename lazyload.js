@@ -512,6 +512,13 @@ Lazyload.prototype = {
   }
 };
 
+var defIns;
+Lazyload.instance = function() {
+  return defIns || (defIns = new Lazyload({
+    autoDestroy: false
+  }));
+};
+
 return Lazyload;
 
 });
