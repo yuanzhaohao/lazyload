@@ -18,9 +18,7 @@ Then your example([localhost:3000/demo/](localhost:3000/demo/)) will open automa
 ## Usage
 
 #### Normal demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/)
-
-[local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
 
 ``` javascript
 new Lazyload({
@@ -33,9 +31,7 @@ new Lazyload({
 ```
 
 #### autoDestroy demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/autoDestroy.html)
-
-[local demo](http://localhost:3000/demo/autoDestroy.html)
+[live demo](http://yuanzhaohao.com/lazyload/demo/autoDestroy.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/autoDestroy.html)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -61,9 +57,7 @@ $.ajax({
 ```
 
 #### addElements demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/)
-
-[local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -96,9 +90,7 @@ $.ajax({
 ```
 
 #### removeElements demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/)
-
-[local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -108,9 +100,7 @@ lazy.removeElements(document.querySelectorAll('.j_removeElements'));
 ```
 
 #### addCallback demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/)
-
-[local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -122,6 +112,8 @@ lazy.addCallback(document.querySelector('#addCallback'), function () {
 ```
 
 #### removeCallback demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
+
 ``` javascript
 var lazy = new Lazyload({
   diff: 150
