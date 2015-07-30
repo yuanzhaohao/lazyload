@@ -57,7 +57,7 @@ $.ajax({
 ```
 
 #### addElements demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/addElements.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/addElements.html)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -90,7 +90,7 @@ $.ajax({
 ```
 
 #### removeElements demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/removeElements.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/removeElements.html)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -100,7 +100,7 @@ lazy.removeElements(document.querySelectorAll('.j_removeElements'));
 ```
 
 #### addCallback demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/addCallback.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/addCallback.html)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -112,7 +112,7 @@ lazy.addCallback(document.querySelector('#addCallback'), function () {
 ```
 
 #### removeCallback demo
-[live demo](http://yuanzhaohao.com/lazyload/demo/) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/)
+[live demo](http://yuanzhaohao.com/lazyload/demo/removeCallback.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/removeCallback.html)
 
 ``` javascript
 var lazy = new Lazyload({
@@ -128,6 +128,8 @@ lazy.removeCallback(document.querySelector('#removeCallback'));
 ```
 
 #### instance demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/instance.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/instance.html)
+
 ``` javascript
 var lazy = Lazyload.instance();
 $.ajax({
