@@ -295,7 +295,10 @@ Lazyload.prototype = {
     self.resume();
     self._init = null;
   },
-
+  /**
+   * 获取diff
+   * @private
+   */
   _getBoundingRect: function () {
     var self = this,
       diff = self.diff;
@@ -310,7 +313,10 @@ Lazyload.prototype = {
     }
     return diff;
   },
-
+  /**
+   * attach scroll/resize event
+   * @private
+   */
   _initLoadEvent: function () {
     var self = this,
       autoDestroy = self.autoDestroy,
@@ -337,7 +343,10 @@ Lazyload.prototype = {
       self._loadItems();
     }, duration, self);
   },
-
+  /**
+   * 执行lazyload元素回调
+   * @private
+   */
   _loadItems: function () {
     var self = this,
       callbacks = self._callbacks;
@@ -346,7 +355,6 @@ Lazyload.prototype = {
       callback && self._loadItem(key, callback);
     });
   },
-
   _loadItem: function (key, callback) {
     var self = this,
       callback = callback || self._callbacks[key];
@@ -372,7 +380,10 @@ Lazyload.prototype = {
     }
     return remove;
   },
-
+  /**
+   * 检查元素是否在视窗内
+   * @param: [el] {DOM element}
+   */
   __inViewport: function (el) {
     var self = this,
       elemOffset = getOffset(el),
@@ -387,7 +398,11 @@ Lazyload.prototype = {
       && !(y >= elemOffset.top + el.offsetHeight + diff.top)
       && !(x > elemOffset.left + el.offsetWidth + diff.left);
   },
-
+  /**
+   * 添加回调函数, 当el即将出现在视窗中时, 触发fn
+   * @param: [el] {DOM element}
+   * @param: [fn] {Function} 回调函数
+   */
   addCallback: function (el, fn) {
     if (!utils.isElement(el)) {
       return;
@@ -404,7 +419,11 @@ Lazyload.prototype = {
     self._loadItem(key, callback);
     return key;
   },
-
+  /**
+   * 添加回调函数
+   * @param: [el] {DOM element}
+   * @param: [fn] {Function} 回调函数
+   */
   removeCallback: function (el, fn) {
     if (!utils.isElement(el)) {
       return;
@@ -418,7 +437,10 @@ Lazyload.prototype = {
       }
     });
   },
-
+  /**
+   * 增加回调lazyload元素到lazyload列表
+   * @param: [els] {String|DOM element|Array element}
+   */
   addElements: function (els) {
     var self = this,
       attribute = self.attribute;
@@ -448,7 +470,10 @@ Lazyload.prototype = {
       });
     });
   },
-
+  /**
+   * 从lazyload列表里移除回调lazyload元素
+   * @param: [els] {String|DOM element|Array element}
+   */
   removeElements: function (els) {
     var self = this,
       attribute = self.attribute,
@@ -471,7 +496,9 @@ Lazyload.prototype = {
       }
     });
   },
-
+  /**
+   * 获取lazyload元素
+   */
   getElements: function () {
     var self = this,
       els = [],
@@ -482,7 +509,9 @@ Lazyload.prototype = {
     });
     return els;
   },
-
+  /**
+   * 继续监控lazyload元素
+   */
   resume: function () {
     var self = this,
       load = self._loadFn;
@@ -494,7 +523,9 @@ Lazyload.prototype = {
     win.addEventListener('touchmove', load, false);
     win.addEventListener('resize', load, false);
   },
-
+  /**
+   * 停止监控lazyload元素
+   */
   pause: function () {
     var self = this,
       load = self._loadFn;
@@ -506,7 +537,9 @@ Lazyload.prototype = {
     win.removeEventListener('touchmove', load, false);
     win.removeEventListener('resize', load, false);
   },
-
+  /**
+   * 停止监控并销毁组件
+   */
   destroy: function () {
     var self = this;
 
@@ -514,7 +547,9 @@ Lazyload.prototype = {
     self._callbacks = {};
     self._destroyed = 1;
   },
-
+  /**
+   * 强制立刻检测lazyload元素
+   */
   refresh: function () {
     this._loadFn();
   }
