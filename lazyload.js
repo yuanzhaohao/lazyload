@@ -1,6 +1,6 @@
 /**
  * @name: lazyload
- * @description: 数据延迟加载组件
+ * @description: A lightweight module to LazyLoad elements which are out of current viewPort. 数据延迟加载组件
  * @author: yuanzhaohao
  */
 (function (root, factory) {
@@ -254,6 +254,14 @@ function getOffset (el) {
   };
 }
 
+/**
+ * A lightweight module to LazyLoad elements which are out of current viewport. 数据延迟加载组件
+ * @param: [attribute] {String} The attribute of imgs elements which are of current  viewport.
+ * @param: [diff] {Number|Object} Distance outside viewport or specified container to pre load.
+ * @param: [autoDestroy] {Boolean} Whether destroy this component when all lazy loaded elements are loaded.
+ * @param: [duration] {Number} The time of calculating lazyload frequency.
+ * @param: [onStart] {Function} called before process lazyload content.
+ */
 function Lazyload (cfgs) {
   return this instanceof Lazyload
     ? this._init.call(this, cfgs)
