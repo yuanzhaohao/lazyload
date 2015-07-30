@@ -18,6 +18,7 @@ Then your example([localhost:3000/demo/](localhost:3000/demo/)) will open automa
 ## Usage
 
 #### Normal demo
+[live](http://yuanzhaohao.com/lazyload/demo/) [local](http://localhost:3000/demo/)
 
 ``` javascript
 new Lazyload({
