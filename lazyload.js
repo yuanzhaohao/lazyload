@@ -197,22 +197,6 @@ var utils = (function (win, doc) {
     };
   };
 
-  function createIndexFinder(dir) {
-    return function(array, item, context) {
-      var length = array.length;
-      var index = dir > 0 ? 0 : length - 1;
-      for (; index >= 0 && index < length; index += dir) {
-        if (array[index] === item) {
-          return index;
-        }
-      }
-      return -1;
-    };
-  }
-
-  self.findIndex = createIndexFinder(1);
-  self.findLastIndex = createIndexFinder(-1);
-
   function createIndexOfFinder(dir) {
     return function(array, item, idx) {
       idx = idx || 0;
