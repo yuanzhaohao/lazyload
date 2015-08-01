@@ -317,21 +317,24 @@ Lazyload.prototype = {
       duration = self.duration,
       attribute = self.attribute;
 
-    self.addStartListener(function (param) {
+    self.addStartListener(function (event, callback) {
       self.onStart && self.onStart.apply(this, arguments);
+      callback && callback();
     });
 
     self.imgHandle = function () {
       var img = this,
-        param = {
+        params = {
           elem: img,
           src: img.getAttribute(attribute)
         };
-      // self.onStart && self.onStart(param);
-      if (param.src && img.src != param.src) {
-        img.src = param.src;
-      }
-      img.removeAttribute(attribute);
+      runAsyncQueue(self._startListeners, params, function (event) {
+        if (event.src && img.src != event.src) {
+          img.src = event.src;
+        }
+        img.removeAttribute(attribute);
+      });
+
     };
 
     self._loadFn = utils.throttle(function () {

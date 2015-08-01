@@ -1,68 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=gbk">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
-  <meta name="author" content="yuanzhaohao@163.com">
-  <meta name="description" content="lazyload-数据延迟加载组件 a lightweight module to lazy load any data">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="apple-touch-fullscreen" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <title>addStartListener - Lazyload demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta name="author" content="yuanzhaohao@163.com">
+<meta name="description" content="lazyload-数据延迟加载组件 a lightweight module to lazy load any data">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>addStartListener - Lazyload demo</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<style media="screen">
-* {
-  padding: 0;
-  margin: 0;
-}
-img {
-  display: block;
-  width: 100%;
-  min-height: 200px;
-  background-color: #f7f7f7;
-  margin: 7px 0;;
-}
-.btn-box {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 30px;
-  background-color: #eee;
-  color: #333;
-  font-size: 16px;
-  line-height: 30px;
-  text-align: center;
-}
-.btn {
-  float: left;
-  width: 50%;
-}
-.title {
-  width: 100%;
-  height: 30px;
-  line-height: 30px;
-  background-color: #ccc;
-  font-size: 16px;
-  color: #999;
-  text-align: center;
-}
-.ajax div {
-  position: relative;
-  width: 100%;
-  padding-top: 100%;
-}
-.ajax img {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-</style>
 <div id="J_instance">
   <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
   <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
@@ -82,15 +32,16 @@ img {
   <img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
   <img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
 </div>
-<div id="J_ajax">
+<div id="J_ajax" class="ajax">
   <h2 class="title">instance</h2>
 </div>
 <script src="zepto.js"></script>
 <script src="../lazyload.js"></script>
 <script>
 var lazy = Lazyload.instance();
-lazy.addStartListener(function (params) {
-  console.log(params);
+lazy.addStartListener(function (event, callback) {
+  console.log('addStartListener');
+  callback();
 });
 $.ajax({
   url: 'https://api.github.com/users/octocat/gists',
