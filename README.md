@@ -148,3 +148,39 @@ $.ajax({
   }
 });
 ```
+
+#### addStartListener demo
+[live demo](http://yuanzhaohao.com/lazyload/demo/addStartListener.html) &nbsp;&nbsp;|&nbsp;&nbsp; [local demo](http://localhost:3000/demo/addStartListener.html)
+
+``` javascript
+var lazy = Lazyload.instance();
+lazy.addStartListener(function (event, callback) {
+  if (event.type == 'img') {
+    var img = $(event.elem),
+      beforeCls = 'before-lazyload',
+      cls = 'lazyload';
+    img.addClass(beforeCls);
+    img.on('load', function (e) {
+      img.addClass(cls);
+      img.removeClass(beforeCls);
+      img.off('load');
+    });
+  }
+  callback();
+});
+$.ajax({
+  url: 'https://api.github.com/users/octocat/gists',
+  dataType: 'jsonp',
+  success: function (re) {
+    if (re && re.data && re.data.length) {
+      var h = '',
+        ajaxEl = $('#J_ajax')
+      $.each(re.data, function (key, item) {
+        h += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="instance img" /></div>';
+      });
+      ajaxEl.append(h);
+      lazy.addElements(ajaxEl);
+    }
+  }
+});
+```
