@@ -40,7 +40,17 @@
 <script>
 var lazy = Lazyload.instance();
 lazy.addStartListener(function (event, callback) {
-  console.log('addStartListener');
+  if (event.type == 'img') {
+    var img = $(event.elem),
+      beforeCls = 'before-lazyload',
+      cls = 'lazyload';
+    img.addClass(beforeCls);
+    img.on('load', function (e) {
+      img.removeClass(beforeCls);
+      img.addClass(cls);
+      img.off('load');
+    });
+  }
   callback();
 });
 $.ajax({

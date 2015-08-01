@@ -325,6 +325,7 @@ Lazyload.prototype = {
     self.imgHandle = function () {
       var img = this,
         params = {
+          type: 'img',
           elem: img,
           src: img.getAttribute(attribute)
         };
