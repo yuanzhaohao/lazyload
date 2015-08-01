@@ -238,6 +238,15 @@ function getOffset (el) {
   };
 }
 
+function runAsyncQueue (queue, event, callback) {
+  var i = queue.length;
+
+  function run() {
+    i ? queue[--i].call(null, event, run) : callback(event);
+  }
+
+  run();
+}
 /**
  * A lightweight module to LazyLoad elements which are out of current viewport. 数据延迟加载组件
  * @param: [attribute] {String} The attribute of imgs elements which are of current  viewport.
@@ -273,6 +282,7 @@ Lazyload.prototype = {
     self.onStart = utils.isFunction(cfgs.onStart) ? cfgs.onStart : defaults.onStart;
 
     self._callbacks = {};
+    self._startListeners = [];
     self._initLoadEvent();
     self.addElements(self.element);
     self._loadFn();
@@ -307,13 +317,17 @@ Lazyload.prototype = {
       duration = self.duration,
       attribute = self.attribute;
 
+    self.addStartListener(function (param) {
+      self.onStart && self.onStart.apply(this, arguments);
+    });
+
     self.imgHandle = function () {
       var img = this,
         param = {
           elem: img,
           src: img.getAttribute(attribute)
         };
-      self.onStart && self.onStart(param);
+      // self.onStart && self.onStart(param);
       if (param.src && img.src != param.src) {
         img.src = param.src;
       }
@@ -381,6 +395,50 @@ Lazyload.prototype = {
       && !(w + x <= elemOffset.left - diff.right)
       && !(y >= elemOffset.top + el.offsetHeight + diff.top)
       && !(x > elemOffset.left + el.offsetWidth + diff.left);
+  },
+  /**
+   * 继续监控lazyload元素
+   */
+  resume: function () {
+    var self = this,
+      load = self._loadFn;
+
+    if (self._destroyed) {
+      return;
+    }
+    win.addEventListener('scroll', load, false);
+    win.addEventListener('touchmove', load, false);
+    win.addEventListener('resize', load, false);
+  },
+  /**
+   * 停止监控lazyload元素
+   */
+  pause: function () {
+    var self = this,
+      load = self._loadFn;
+
+    if (self._destroyed) {
+      return;
+    }
+    win.removeEventListener('scroll', load, false);
+    win.removeEventListener('touchmove', load, false);
+    win.removeEventListener('resize', load, false);
+  },
+  /**
+   * 停止监控并销毁组件
+   */
+  destroy: function () {
+    var self = this;
+
+    self.pause();
+    self._callbacks = {};
+    self._destroyed = 1;
+  },
+  /**
+   * 强制立刻检测lazyload元素
+   */
+  refresh: function () {
+    this._loadFn();
   },
   /**
    * 添加回调函数, 当el即将出现在视窗中时, 触发fn
@@ -493,49 +551,16 @@ Lazyload.prototype = {
     });
     return els;
   },
-  /**
-   * 继续监控lazyload元素
-   */
-  resume: function () {
-    var self = this,
-      load = self._loadFn;
 
-    if (self._destroyed) {
+  addStartListener: function (lis) {
+    var self = this,
+      listners = self._startListeners,
+      onStart = self.onStart;
+
+    if (!lis || utils.indexOf(listners, lis) != -1) {
       return;
     }
-    win.addEventListener('scroll', load, false);
-    win.addEventListener('touchmove', load, false);
-    win.addEventListener('resize', load, false);
-  },
-  /**
-   * 停止监控lazyload元素
-   */
-  pause: function () {
-    var self = this,
-      load = self._loadFn;
-
-    if (self._destroyed) {
-      return;
-    }
-    win.removeEventListener('scroll', load, false);
-    win.removeEventListener('touchmove', load, false);
-    win.removeEventListener('resize', load, false);
-  },
-  /**
-   * 停止监控并销毁组件
-   */
-  destroy: function () {
-    var self = this;
-
-    self.pause();
-    self._callbacks = {};
-    self._destroyed = 1;
-  },
-  /**
-   * 强制立刻检测lazyload元素
-   */
-  refresh: function () {
-    this._loadFn();
+    listners.push(lis);
   }
 };
 
