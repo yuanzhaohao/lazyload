@@ -46,8 +46,8 @@ lazy.addStartListener(function (event, callback) {
       cls = 'lazyload';
     img.addClass(beforeCls);
     img.on('load', function (e) {
-      img.removeClass(beforeCls);
       img.addClass(cls);
+      img.removeClass(beforeCls);
       img.off('load');
     });
   }
