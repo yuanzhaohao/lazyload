@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta name="author" content="yuanzhaohao@163.com">
+<meta name="description" content="lazyload-数据延迟加载组件 a lightweight module to lazy load any data">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>addStartListener - Lazyload demo</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="J_instance">
+  <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+  <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+  <img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+  <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+  <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+  <img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+  <img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+  <img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+  <img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+  <img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+</div>
+<div id="J_ajax" class="ajax">
+  <h2 class="title">instance</h2>
+</div>
+<script src="zepto.js"></script>
+<script src="../lazyload.js"></script>
+<script>
+var lazy = Lazyload.instance();
+lazy.addStartListener(function (event, callback) {
+  if (event.type == 'img') {
+    var img = $(event.elem),
+      beforeCls = 'before-lazyload',
+      cls = 'lazyload';
+    img.addClass(beforeCls);
+    img.on('load', function (e) {
+      img.addClass(cls);
+      img.removeClass(beforeCls);
+      img.off('load');
+    });
+  }
+  callback();
+});
+$.ajax({
+  url: 'https://api.github.com/users/octocat/gists',
+  dataType: 'jsonp',
+  success: function (re) {
+    if (re && re.data && re.data.length) {
+      var h = '',
+        ajaxEl = $('#J_ajax')
+      $.each(re.data, function (key, item) {
+        h += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="instance img" /></div>';
+      });
+      ajaxEl.append(h);
+      lazy.addElements(ajaxEl);
+    }
+  }
+});
+</script>
+</body>
+</html>

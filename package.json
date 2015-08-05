@@ -1,0 +1,25 @@
+{
+  "name": "lazyload",
+  "description": "数据延迟加载组件",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuanzhaohao/lazyload.git"
+  },
+  "keywords": [
+    "mobile",
+    "lazyload",
+    "image",
+    "touch"
+  ],
+  "author": "yuanzhaohao",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "gulp": "~3.8.11",
+    "gulp-connect": "~2.2.0",
+    "gulp-open": "~0.3.2",
+    "gulp-code": "1.x.x",
+    "gulp-rename": "1.x.x"
+  }
+}

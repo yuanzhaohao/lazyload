@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta name="author" content="yuanzhaohao@163.com">
+<meta name="description" content="lazyload-数据延迟加载组件 a lightweight module to lazy load any data">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>autoDestroy - Lazyload demo</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<div id="ajax" class="ajax">
+  <h2 class="title">ajax</h2>
+</div>
+<script src="zepto.js"></script>
+<script src="../lazyload.js"></script>
+<script>
+window.scrollTo(0, 0);
+var lazy = new Lazyload({
+  diff: 0
+});
+$.ajax({
+  url: 'https://api.github.com/users/octocat/gists',
+  dataType: 'jsonp',
+  success: function (re) {
+    if (re && re.data && re.data.length) {
+      var h = '',
+        h1 = '',
+        ajaxEl = $('#ajax'),
+        ajaxEl1 = $('#ajax1');
+      $.each(re.data, function (key, item) {
+        h += '<div><img data-lazyload="' + item.owner['avatar_url'] + '" alt="ajax img" /></div>';
+      });
+      ajaxEl.append(h);
+      lazy.addElements(ajaxEl);
+    }
+  }
+});
+</script>
+</body>
+</html>

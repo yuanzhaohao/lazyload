@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta name="author" content="yuanzhaohao@163.com">
+<meta name="description" content="lazyload-数据延迟加载组件 a lightweight module to lazy load any data">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>addCallback - Lazyload demo</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+
+<img data-lazyload="http://5.26923.com/download/pic/000/324/986f7ee6894122e82781b80c6a0247c5.jpg" />
+<img data-lazyload="http://5.26923.com/download/pic/000/328/ba80a24af0d5aba07e1461eca71f9502.jpg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201210/30/20121030140854_JZm88.thumb.600_0.jpeg" />
+<img data-lazyload="http://img2.duitang.com/uploads/item/201203/23/20120323191604_wcHej.jpeg" />
+<img data-lazyload="http://img.kumi.cn/photo/ee/83/e8/ee83e8a10ace2c4a.jpg" />
+<div id="addCallback" class="text">DEMO addCallback</div>
+<script src="../lazyload.js"></script>
+<script>
+var lazy = new Lazyload({
+  diff: 150
+});
+lazy.addCallback(document.querySelector('#addCallback'), function () {
+  console.log('call addCallback');
+});
+</script>
+</body>
+</html>
