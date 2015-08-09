@@ -4,7 +4,7 @@ Lazyload
 
 ## Demo & Examples
 
-Live demo: [http://yuanzhaohao.com/lazyload/demo/](http://yuanzhaohao.com/lazyload/demo/)
+Live demo: [http://yuanzhaohao.github.io/lazyload/](http://yuanzhaohao.github.io/lazyload/)
 
 To build the examples locally, run:
 
