@@ -168,6 +168,7 @@ lazy.addStartListener(function (event, callback) {
   }
   callback();
 });
+
 $.ajax({
   url: 'https://api.github.com/users/octocat/gists',
   dataType: 'jsonp',
