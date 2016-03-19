@@ -184,7 +184,7 @@ var utils = (function (win, doc) {
     return function () {
       if (!lastStart
         || lastEnd >= lastStart && self.now() - lastEnd > ms
-        || lastEnd < lastStart && S.now() - lastStart > ms * 8
+        || lastEnd < lastStart && self.now() - lastStart > ms * 8
       ) {
         run();
       }
