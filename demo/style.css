@@ -8,6 +8,12 @@ body {
 img {
   vertical-align: middle;
 }
+.text {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
 .btn-box {
   position: fixed;
   bottom: 0;
