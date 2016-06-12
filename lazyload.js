@@ -17,17 +17,17 @@
     root.Lazyload = factory();
   }
 })(this, function () {
-  var win = window,
-    doc = document,
-    INDEX = 0,
-    noop = function () {};
+  var win = window;
+  var doc = document;
+  var INDEX = 0;
+  var noop = function () {};
   var utils = (function () {
     var self = {};
     var ObjProto = Object.prototype;
-    var toString = ObjProto.toString,
-      hasOwnProperty = ObjProto.hasOwnProperty;
-    var nativeKeys = Object.keys,
-      nativeIsArray = Array.isArray;
+    var toString = ObjProto.toString;
+    var hasOwnProperty = ObjProto.hasOwnProperty;
+    var nativeKeys = Object.keys;
+    var nativeIsArray = Array.isArray;
 
     self.isObject = function (obj) {
       var type = typeof obj;
@@ -219,21 +219,67 @@
     self.indexOf = createIndexOfFinder(1);
     self.lastIndexOf = createIndexOfFinder(-1);
 
+    self.isCross = function(r1, r2) {
+      var r = {};
+      r.top = Math.max(r1.top, r2.top);
+      r.bottom = Math.min(r1.bottom, r2.bottom);
+      r.left = Math.max(r1.left, r2.left);
+      r.right = Math.min(r1.right, r2.right);
+      return r.bottom >= r.top && r.right >= r.left;
+    };
+
+    self.scrollLeft = function() {
+      return (win.pageYOffset || 0) * 1 + (doc.documentElement.scrollLeft || 0) * 1 + (doc.body.scrollLeft || 0) * 1;
+    }
+
+    self.scrollTop = function() {
+      return (win.pageXOffset || 0) * 1 + (doc.documentElement.scrollTop || 0) * 1 + (doc.body.scrollTop || 0) * 1;
+    }
+
+    self.addClass = function(el, cls) {
+      var oldCls = el.className;
+      var blank = (oldCls !== '') ? ' ' : '';
+      var newCls = oldCls + blank + cls;
+      el.className = newCls;
+    }
+
+    self.removeClass = function(el, cls) {
+      var oldCls = ' ' + el.className + ' ';
+      oldCls = oldCls.replace(/(\s+)/gi, ' ');
+      var removed = oldCls.replace(' ' + cls + ' ', ' ');
+      removed = removed.replace(/(^\s+)|(\s+$)/g, '');
+      el.className = removed;
+    }
+
+    self.hasClass = function(el, cls) {
+      var oldCls = el.className.split(/\s+/);
+      var i = oldCls.length;
+
+      while(i--) {
+        if (oldCls[i] === cls) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     return self;
   })(window, document, undefined);
 
-  function getOffset (el) {
-    var parent = el,
-      left = 0,
-      top = 0;
-    while (parent !== null && parent !== doc) {
-      left += parent.offsetLeft;
-      top += parent.offsetTop;
-      parent = parent.offsetParent;
+  function offset(el) {
+    var x = utils.scrollLeft();
+    var y = utils.scrollTop();
+    if (el.getBoundingClientRect) {
+      var box = el.getBoundingClientRect();
+      var doc = document;
+      var body = doc.body;
+      var docElem = doc && doc.documentElement;
+      x += box.left - (docElem.clientLeft || body.clientLeft || 0);
+      y += box.top - (docElem.clientTop || body.clientTop || 0);
     }
     return {
-      left: left,
-      top: top
+      left: x,
+      top: y
     };
   }
 
@@ -267,6 +313,7 @@
       var self = this;
       var defaults = {
         attribute: 'data-lazyload',
+        lazyCls: 'lib-lazyload',
         diff: 100,
         autoDestroy: true,
         duration: 300,
@@ -274,8 +321,9 @@
       };
       self.element = document;
       self.attribute = utils.isString(cfgs.attribute) ? cfgs.attribute : defaults.attribute;
+      self.lazyCls = utils.isString(cfgs.lazyCls) ? cfgs.lazyCls : defaults.lazyCls;
       self.diff = cfgs.diff === undefined ? defaults.diff : cfgs.diff;
-      self.diff = self._getBoundingRect();
+      self.diff = self._getBoundingRect(self.element);
       self.autoDestroy = cfgs.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
       self.duration = utils.isNumber(cfgs.duration) && cfgs.duration > 0 ? cfgs.duration : defaults.duration;
       self.onStart = utils.isFunction(cfgs.onStart) ? cfgs.onStart : defaults.onStart;
@@ -288,14 +336,40 @@
       self.resume();
       self._init = null;
     },
+    set: function(key, val) {
+      var self = this;
+      if (utils.isString(key) && val) {
+        self[key] = val;
+        if (key === 'diff') {
+          self.diff = self._getBoundingRect();
+        }
+      }
+    },
     /**
      * 获取diff
      * @private
      */
-    _getBoundingRect: function () {
-      var self = this,
-        diff = self.diff;
+    _getBoundingRect: function(el) {
+      var vh;
+      var vw;
+      var left;
+      var top;
 
+      if (el !== undefined) {
+        vh = el.offsetHeight;
+        vw = el.offsetWidth;
+        var elemOffset = offset(el);
+        left = elemOffset.left;
+        top = elemOffset.top;
+      }
+      else {
+        vh = win.innerHeight;
+        vw = win.innerWidth;
+        left = utils.scrollLeft();
+        top = utils.scrollTop();
+      }
+
+      var diff = this.diff;
       if (!utils.isObject(diff)) {
         diff = {
           top: diff,
@@ -304,7 +378,13 @@
           left: diff
         };
       }
-      return diff;
+
+      return {
+        left: left - (diff.left || 0),
+        top: top - (diff.top || 0),
+        right: left + vw + (diff.right || 0),
+        bottom: top + vh + (diff.bottom || 0)
+      };
     },
     /**
      * attach scroll/resize event
@@ -322,17 +402,23 @@
       });
 
       self.imgHandle = function () {
-        var img = this,
-          params = {
-            type: 'img',
-            elem: img,
-            src: img.getAttribute(attribute)
-          };
+        var el = this;
+        var params = {
+          type: 'img',
+          elem: el,
+          src: el.getAttribute(attribute)
+        };
         runAsyncQueue(self._startListeners, params, function (event) {
-          if (event.src && img.src !== event.src) {
-            img.src = event.src;
+          el.removeAttribute(attribute);
+          utils.removeClass(el, self.lazyCls);
+          if (event.src && el.src !== event.src) {
+            if (el.tagName === 'IMG') {
+              el.setAttribute('src', event.src);
+            }
+            else {
+              el.style.backgroundImage = 'url(' + event.src + ')';
+            }
           }
-          img.removeAttribute(attribute);
         });
 
       };
@@ -366,7 +452,7 @@
       var el = callback.el,
         fn = callback.fn,
         remove = false;
-      if (self.__inViewport(el)) {
+      if (self.__elementInViewport(el)) {
         try {
           remove = fn.call(el);
         }
@@ -387,7 +473,7 @@
      */
     __inViewport: function (el) {
       var self = this,
-        elemOffset = getOffset(el),
+        elemOffset = offset(el),
         diff = self.diff,
         w = win.innerWidth,
         h = win.innerHeight,
@@ -398,6 +484,23 @@
         && !(w + x <= elemOffset.left - diff.right)
         && !(y >= elemOffset.top + el.offsetHeight + diff.top)
         && !(x > elemOffset.left + el.offsetWidth + diff.left);
+    },
+    __elementInViewport: function(el) {
+      var self = this;
+      if (!el.offsetWidth && !el.offsetHeight) {
+        return false;
+      }
+      var diff = self.diff;
+      var windowRegion = self._getBoundingRect();
+      var elemOffset = offset(el);
+      var elemRegion = {
+        left: elemOffset.left,
+        top: elemOffset.top,
+        right: elemOffset.left + el.offsetHeight + diff.top,
+        bottom: elemOffset.top + el.offsetWidth + diff.left
+      };
+      var inWin = utils.isCross(windowRegion, elemRegion);
+      return inWin;
     },
     /**
      * 继续监控lazyload元素
@@ -505,7 +608,7 @@
         if (!el) {
           return;
         }
-        var imgs = utils.filter(el.querySelectorAll('img'), function (img) {
+        var imgs = utils.filter(el.querySelectorAll('.' + self.lazyCls), function (img) {
           return img;
         });
         utils.each(utils.filter([el].concat(imgs), function (img) {
