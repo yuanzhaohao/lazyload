@@ -471,20 +471,6 @@
      * 检查元素是否在视窗内
      * @param: [el] {DOM element}
      */
-    __inViewport: function (el) {
-      var self = this,
-        elemOffset = offset(el),
-        diff = self.diff,
-        w = win.innerWidth,
-        h = win.innerHeight,
-        x = win.scrollX,
-        y = win.scrollY;
-
-      return !(h + y <= elemOffset.top - diff.bottom)
-        && !(w + x <= elemOffset.left - diff.right)
-        && !(y >= elemOffset.top + el.offsetHeight + diff.top)
-        && !(x > elemOffset.left + el.offsetWidth + diff.left);
-    },
     __elementInViewport: function(el) {
       var self = this;
       if (!el.offsetWidth && !el.offsetHeight) {
@@ -496,8 +482,8 @@
       var elemRegion = {
         left: elemOffset.left,
         top: elemOffset.top,
-        right: elemOffset.left + el.offsetHeight + diff.top,
-        bottom: elemOffset.top + el.offsetWidth + diff.left
+        right: elemOffset.left + el.offsetHeight + diff.left,
+        bottom: elemOffset.top + el.offsetWidth + diff.top
       };
       var inWin = utils.isCross(windowRegion, elemRegion);
       return inWin;
