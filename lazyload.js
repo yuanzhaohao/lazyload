@@ -236,6 +236,36 @@
       return (win.pageXOffset || 0) * 1 + (doc.documentElement.scrollTop || 0) * 1 + (doc.body.scrollTop || 0) * 1;
     }
 
+    self.outerWidth = function(el) {
+      if (el.nodeType === 9) {
+        return Math.max(
+          document.documentElement.scrollWidth || 0,
+          win.innerWidth
+        );
+      }
+
+      var val = el.offsetWidth;
+
+      if (val > 0) {
+        return val;
+      }
+    }
+
+    self.outerHeight = function(el) {
+      if (el.nodeType === 9) {
+        return Math.max(
+          document.documentElement.scrollHeight || 0,
+          win.innerHeight
+        );
+      }
+
+      var val = el.offsetHeight;
+
+      if (val > 0) {
+        return val;
+      }
+    }
+
     self.addClass = function(el, cls) {
       var oldCls = el.className;
       var blank = (oldCls !== '') ? ' ' : '';
@@ -323,7 +353,6 @@
       self.attribute = utils.isString(cfgs.attribute) ? cfgs.attribute : defaults.attribute;
       self.lazyCls = utils.isString(cfgs.lazyCls) ? cfgs.lazyCls : defaults.lazyCls;
       self.diff = cfgs.diff === undefined ? defaults.diff : cfgs.diff;
-      self.diff = self._getBoundingRect(self.element);
       self.autoDestroy = cfgs.autoDestroy === undefined ? defaults.autoDestroy : cfgs.autoDestroy;
       self.duration = utils.isNumber(cfgs.duration) && cfgs.duration > 0 ? cfgs.duration : defaults.duration;
       self.onStart = utils.isFunction(cfgs.onStart) ? cfgs.onStart : defaults.onStart;
@@ -340,8 +369,13 @@
       var self = this;
       if (utils.isString(key) && val) {
         self[key] = val;
-        if (key === 'diff') {
-          self.diff = self._getBoundingRect();
+        if (key === 'diff' && !utils.isObject(val)) {
+          self.diff = {
+            top: val,
+            right: val,
+            bottom: val,
+            left: val
+          };
         }
       }
     },
@@ -350,14 +384,15 @@
      * @private
      */
     _getBoundingRect: function(el) {
+      var diff = this.diff;
       var vh;
       var vw;
       var left;
       var top;
 
       if (el !== undefined) {
-        vh = el.offsetHeight;
-        vw = el.offsetWidth;
+        vh = utils.outerWidth(el);
+        vw = utils.outerHeight(el);
         var elemOffset = offset(el);
         left = elemOffset.left;
         top = elemOffset.top;
@@ -369,7 +404,6 @@
         top = utils.scrollTop();
       }
 
-      var diff = this.diff;
       if (!utils.isObject(diff)) {
         diff = {
           top: diff,
@@ -471,20 +505,6 @@
      * 检查元素是否在视窗内
      * @param: [el] {DOM element}
      */
-    __inViewport: function (el) {
-      var self = this,
-        elemOffset = offset(el),
-        diff = self.diff,
-        w = win.innerWidth,
-        h = win.innerHeight,
-        x = win.scrollX,
-        y = win.scrollY;
-
-      return !(h + y <= elemOffset.top - diff.bottom)
-        && !(w + x <= elemOffset.left - diff.right)
-        && !(y >= elemOffset.top + el.offsetHeight + diff.top)
-        && !(x > elemOffset.left + el.offsetWidth + diff.left);
-    },
     __elementInViewport: function(el) {
       var self = this;
       if (!el.offsetWidth && !el.offsetHeight) {
@@ -492,14 +512,14 @@
       }
       var diff = self.diff;
       var windowRegion = self._getBoundingRect();
-      var elemOffset = offset(el);
-      var elemRegion = {
-        left: elemOffset.left,
-        top: elemOffset.top,
-        right: elemOffset.left + el.offsetHeight + diff.top,
-        bottom: elemOffset.top + el.offsetWidth + diff.left
+      var elOffset = offset(el);
+      var elRegion = {
+        left: elOffset.left,
+        top: elOffset.top,
+        right: elOffset.left + el.offsetHeight,
+        bottom: elOffset.top + el.offsetWidth
       };
-      var inWin = utils.isCross(windowRegion, elemRegion);
+      var inWin = utils.isCross(windowRegion, elRegion);
       return inWin;
     },
     /**
