@@ -512,21 +512,12 @@
       }
       var diff = self.diff;
       var windowRegion = self._getBoundingRect();
-<<<<<<< HEAD
-      var elemOffset = offset(el);
-      var elemRegion = {
-        left: elemOffset.left,
-        top: elemOffset.top,
-        right: elemOffset.left + el.offsetHeight + diff.left,
-        bottom: elemOffset.top + el.offsetWidth + diff.top
-=======
       var elOffset = offset(el);
       var elRegion = {
         left: elOffset.left,
         top: elOffset.top,
         right: elOffset.left + el.offsetHeight,
         bottom: elOffset.top + el.offsetWidth
->>>>>>> master
       };
       var inWin = utils.isCross(windowRegion, elRegion);
       return inWin;
