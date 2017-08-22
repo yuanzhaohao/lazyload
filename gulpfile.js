@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify'); // 使用uglify进行压缩
 var eslint = require('gulp-eslint');
 var connect = require('gulp-connect');
 var rename = require('gulp-rename');
