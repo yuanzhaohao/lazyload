@@ -5,6 +5,7 @@ var connect = require('gulp-connect');
 var rename = require('gulp-rename');
 var open = require('gulp-open');
 
+
 gulp.task('js', function () {
   return gulp.src('./lazyload.js')
     .pipe(rename(function (path) {
