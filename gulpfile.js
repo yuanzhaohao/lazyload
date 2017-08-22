@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var code = require('gulp-code');
+var uglify = require('gulp-uglify');
 var eslint = require('gulp-eslint');
 var connect = require('gulp-connect');
 var rename = require('gulp-rename');
@@ -7,11 +7,10 @@ var open = require('gulp-open');
 
 gulp.task('js', function () {
   return gulp.src('./lazyload.js')
-    .pipe(code.lint())
     .pipe(rename(function (path) {
       path.basename = path.basename + '.min';
     }))
-    .pipe(code.minify())
+    .pipe(uglify())
     .pipe(gulp.dest('./'));
 });
 
