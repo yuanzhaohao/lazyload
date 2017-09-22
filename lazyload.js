@@ -296,20 +296,20 @@
     return self;
   })(window, document, undefined);
 
+  /**
+   * [offset 获取边距尺寸]
+   * @param  {[type]} el   [description]
+   * @return {[type]}       [description]
+   */
   function offset(el) {
-    var x = utils.scrollLeft();
-    var y = utils.scrollTop();
-    if (el.getBoundingClientRect) {
-      var box = el.getBoundingClientRect();
-      var doc = document;
-      var body = doc.body;
-      var docElem = doc && doc.documentElement;
-      x += box.left - (docElem.clientLeft || body.clientLeft || 0);
-      y += box.top - (docElem.clientTop || body.clientTop || 0);
-    }
+    var left;
+    var top;
+    var clientRect = el.getBoundingClientRect();
+    left = clientRect.left + utils.scrollTop();
+    top = clientRect.top + utils.scrollTop();
     return {
-      left: x,
-      top: y
+      left: left,
+      top: top,
     };
   }
 

@@ -1,11 +1,10 @@
 {
-  "name": "lazyload",
+  "name": "data-lazyload",
   "description": "数据延迟加载组件",
   "version": "0.0.1",
   "scripts": {
     "start": "gulp",
-    "dev": "gulp server",
-    "watch": "gulp watch"
+    "dev": "gulp server"
   },
   "repository": {
     "type": "git",
