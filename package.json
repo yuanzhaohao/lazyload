@@ -1,7 +1,7 @@
 {
   "name": "data-lazyload",
   "description": "数据延迟加载组件",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "scripts": {
     "start": "gulp",
     "dev": "gulp server"
