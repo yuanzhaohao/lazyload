@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "start": "gulp",
-    "dev": "gulp server"
+    "dev": "gulp server",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",
