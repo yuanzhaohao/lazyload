@@ -301,11 +301,27 @@
    * @param  {[type]} el   [description]
    * @return {[type]}       [description]
    */
+   function getOffset(el) {
+     var x = utils.scrollLeft();
+     var y = utils.scrollTop();
+     if (el.getBoundingClientRect) {
+       var box = el.getBoundingClientRect();
+       var doc = document;
+       var body = doc.body;
+       var docElem = doc && doc.documentElement;
+       x += box.left - (docElem.clientLeft || body.clientLeft || 0);
+       y += box.top - (docElem.clientTop || body.clientTop || 0);
+     }
+     return {
+       left: x,
+       top: y
+     };
+   }
   function offset(el) {
     var left;
     var top;
     var clientRect = el.getBoundingClientRect();
-    left = clientRect.left + utils.scrollTop();
+    left = clientRect.left + utils.scrollLeft();
     top = clientRect.top + utils.scrollTop();
     return {
       left: left,
@@ -519,6 +535,8 @@
         right: elOffset.left + el.offsetHeight,
         bottom: elOffset.top + el.offsetWidth
       };
+      console.log(elOffset);
+      console.log(getOffset(el));
       var inWin = utils.isCross(windowRegion, elRegion);
       return inWin;
     },
