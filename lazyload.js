@@ -139,26 +139,6 @@
       };
     }
 
-    self.buffer = function (fn, ms, context) {
-      var timer = null;
-
-      ms = ms || 150;
-      if (self.isString(fn)) {
-        fn = context[fn];
-      }
-      function run () {
-        run.stop();
-        timer = self.later(fn, ms, context, arguments);
-      }
-      run.stop = function () {
-        if (timer) {
-          timer.cancel();
-          timer = 0;
-        }
-      };
-      return run;
-    };
-
     self.throttle = function (fn, ms, context) {
       var lastStart = 0,
         lastEnd = 0,
