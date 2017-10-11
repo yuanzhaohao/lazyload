@@ -1,11 +1,16 @@
 {
   "name": "data-lazyload",
   "description": "数据延迟加载组件",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "start": "gulp",
     "dev": "gulp server"
   },
+  "main": "lazyload.js",
+  "files": [
+    "lazyload.js",
+    "lazyload.min.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/yuanzhaohao/lazyload.git"
